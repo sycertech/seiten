@@ -13,7 +13,7 @@
 
 I've always used Vercel or Cloudflare Pages or GitHub Pages to serve my websites. But for a recent project, [crates.pm](https://github.com/sycertech/crates.pm), I wanted to run everything on one server -- my server. So, I opted to build our Next.js frontend to static files and serve them with nginx. But, I didn't want to have to manually upload the files every time I made a change. So, I built this simple server to handle that for me.  
 
-Once configuring the server with a machine public GPG key, you can sign your tarballs in CD and post them to `/upload/:path`. The server will verify the signature and extract the tarball to `/content/:path`. Then, you can configure nginx to serve the files from that directory.
+Once configuring the server with a machine public GPG key, you can sign your archives in CD and post them to `/upload/:path`. The server will verify the signature and extract the archive to `/content/:path`. Then, you can configure nginx to serve the files from that directory.
 
 ## Usage
 ### Environment Variables
@@ -62,8 +62,22 @@ services:
       - 80:63208
 ```
 
-## Github Action
-To make it easier to deploy your static sites, I've created a Github Action that will sign and upload your tarballs to the server.
+## GitHub Action
+To make it easier to deploy your static sites, I've created a Github Action that will sign and upload your archives to the server.
 ```yml
-# todo
+- name: Upload to Seiten
+  uses: sycertech/seiten/action@v1
+  with:
+    # the url of the seiten server (required)
+    url: ${{ secrets.SEITEN_HOST }}
+    # the private gpg key to sign the archive with (required)
+    gpg-key: ${{ secrets.SEITEN_GPG_PRIVATE_KEY }}
+    # the path to the archive to upload (required)
+    archive: archive.tar.gz
+    # the directory in /content to extract the archive to (required)
+    path: crates.pm
 ```
+You can see it in action in [crates.pm](https://github.com/sycertech/crates.pm/blob/682ef374a492285b8e838b51a4abc83b22908fa5/.github/workflows/web.yml).
+
+## Words of warning
+1. Make sure your archives are flat! The server will extract the archive to the specified path, so if your archive is not flat, it will extract to a subdirectory (read as: make sure index.html is at the root of the archive).
