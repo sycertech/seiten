@@ -14,11 +14,11 @@ use tar::Archive;
 
 #[derive(TryFromMultipart)]
 pub struct UploadAssetRequest {
-	/// The archive itself
+    /// The archive itself
     #[form_data(limit = "50MiB")]
     archive: FieldData<Bytes>,
 
-	/// The signature of the archive
+    /// The signature of the archive
     signature: Bytes,
 }
 
@@ -27,7 +27,7 @@ pub async fn upload(
     Path(out_dir): Path<String>,
     TypedMultipart(UploadAssetRequest { archive, signature }): TypedMultipart<UploadAssetRequest>,
 ) -> Response {
-	// if the accepted directories is empty, allow all
+    // if the accepted directories is empty, allow all
     if !CONFIG.directories.contains(&out_dir) && !CONFIG.directories.is_empty() {
         return (
             StatusCode::FORBIDDEN,
