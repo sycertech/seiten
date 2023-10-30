@@ -39,12 +39,13 @@ RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
 COPY --from=planner /app/recipe.json recipe.json
-RUN cargo chef cook --release --target $TARGET --recipe-path recipe.json
+RUN cargo chef cook --release --target "$TARGET" --recipe-path recipe.json
 COPY Cargo.toml Cargo.lock ./
 COPY . .
-RUN cargo build --release --target $TARGET --bin seiten
+RUN cargo build --release --target "$TARGET" --bin seiten
 
 FROM alpine:3 AS runtime
+ENV TARGET "x86_64-unknown-linux-musl"
 WORKDIR /app
 COPY --from=builder /app/target/$TARGET/release/seiten .
 CMD ["/app/seiten"]
