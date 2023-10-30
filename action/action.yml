@@ -23,12 +23,12 @@ runs:
     - name: Signature
       shell: bash
       run: |
-        gpg --detach-sign --armor -o signature.asc "${{ inputs.tarball }}"
+        gpg --detach-sign --armor -o signature.asc "${{ inputs.archive }}"
 
     - name: Upload
       shell: bash
       run: |
         curl -v \
-        -F "archive=@${{ inputs.tarball }}" \
+        -F "archive=@${{ inputs.archive }}" \
         -F "signature=@signature.asc" \
         ${{ inputs.url }}/upload/${{ inputs.path }}
