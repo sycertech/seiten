@@ -14,7 +14,7 @@ services:
       - 443:443
 
   seiten:
-    image: ghcr.io/sycertech/seiten:latest
+    image: docker.io/sycertech/seiten:latest
     restart: unless-stopped
     volumes:
       - ./content:/content
