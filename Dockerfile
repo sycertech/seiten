@@ -2,7 +2,8 @@ FROM clux/muslrust:1.73.0 as chef
 
 RUN apt-get update && apt-get install -y --no-install-recommends bzip2 gnupg && rm -rf /var/lib/apt/lists/*
 
-ENV TARGET "x86_64-unknown-linux-musl"
+# ENV TARGET "x86_64-unknown-linux-musl"
+ENV TARGET x86_64-unknown-linux-gnu
 ENV SYSTEM_DEPS_LINK static
 
 ARG LIBGPG_ERROR_VER=1.47
@@ -44,8 +45,13 @@ COPY Cargo.toml Cargo.lock ./
 COPY . .
 RUN cargo build --release --target "$TARGET" --bin seiten
 
-FROM alpine:3 AS runtime
-ENV TARGET "x86_64-unknown-linux-musl"
+FROM debian:bookworm-slim AS runtime
+ENV TARGET "x86_64-unknown-linux-gnu"
+RUN apt-get update \
+ && apt-get install --no-install-recommends -y libgpgme-dev \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && apt-get autoremove -y
 WORKDIR /app
 COPY --from=builder /app/target/$TARGET/release/seiten .
 CMD ["/app/seiten"]
