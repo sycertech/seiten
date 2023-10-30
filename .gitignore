@@ -1,0 +1,7 @@
+/target
+*.gpg
+*.asc
+*.tar.gz
+.env
+docker-compose.yml
+!example/docker-compose.yml

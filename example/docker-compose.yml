@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  nginx:
+    image: nginx:bookworm
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+      - ./conf.d:/etc/nginx/conf.d
+      - ./content:/www
+    ports:
+      - 80:80
+      - 443:443
+
+  seiten:
+    image: ghcr.io/sycertech/seiten:latest
+    restart: unless-stopped
+    volumes:
+      - ./content:/content
+    environment:
+      DIRECTORIES: crates.pm
+      PUBLIC_GPG_KEY: ${PUBLIC_GPG_KEY}
+    ports: 
+      - 63208:63208
