@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  slug: ghcr.io/sycertech/seiten
+  slug: docker.io/sycertech/seiten
   dockerfile: ./Dockerfile
 
 jobs:
