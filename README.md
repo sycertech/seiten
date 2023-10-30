@@ -37,9 +37,9 @@ services:
       - other_compose_service_networksb
       - other_compose_service_networksc
     volumes:
-	    - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf
       - ./conf.d:/etc/nginx/conf.d
-	    - ./index.html:/etc/nginx/html/index.html
+      - ./index.html:/etc/nginx/html/index.html
       - ./content:/www
     ports:
       - 80:80
